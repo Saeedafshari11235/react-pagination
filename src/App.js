@@ -7,7 +7,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [paginatedTodo, setPaginatedTodo] = useState([]);
 
-  let pageSize = 10;
+  const pageSize = 10;
   let pageNumber;
 
   useEffect(() => {
@@ -22,16 +22,18 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    let endIndex = pageSize * currentPage;
+    let startIndex = endIndex - pageSize;
+    let shownTodo = todo.slice(startIndex, endIndex);
+    setPaginatedTodo(shownTodo);
+  }, [currentPage, todo]);
+
   const pageCount = Math.ceil(todo.length / pageSize);
   pageNumber = Array.from(Array(pageCount).keys());
 
   const changePagination = (page) => {
     setCurrentPage(page + 1);
-    let endIndex = pageSize * currentPage;
-    let startIndex = endIndex - pageSize;
-    let shownTodo = todo.slice(startIndex, endIndex);
-    console.log(shownTodo)
-    setPaginatedTodo(shownTodo)
   };
 
   return (
