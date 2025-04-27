@@ -15,6 +15,10 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         setTodo(data);
+        let endIndex = pageSize * currentPage;
+        let startIndex = endIndex - pageSize;
+        let shownTodo = data.slice(startIndex, endIndex);
+        setPaginatedTodo(shownTodo);
       });
   }, []);
 
@@ -23,6 +27,11 @@ function App() {
 
   const changePagination = (page) => {
     setCurrentPage(page + 1);
+    let endIndex = pageSize * currentPage;
+    let startIndex = endIndex - pageSize;
+    let shownTodo = todo.slice(startIndex, endIndex);
+    console.log(shownTodo)
+    setPaginatedTodo(shownTodo)
   };
 
   return (
@@ -40,7 +49,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {todo.map((item) => (
+            {paginatedTodo.map((item) => (
               <tr key={todo.id}>
                 <td>{item.id}</td>
                 <td>{item.userId}</td>
