@@ -4,19 +4,26 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [todo, setTodo] = useState([]);
-  const [isPending, setIsPending] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const [paginatedTodo, setPaginatedTodo] = useState([]);
 
+  let pageSize = 10;
+  let pageNumber;
+
   useEffect(() => {
-    setIsPending(true);
     fetch("https://jsonplaceholder.typicode.com/todos")
       .then((res) => res.json())
       .then((data) => {
         setTodo(data);
-        setIsPending(false);
-        console.log(data);
       });
   }, []);
+
+  const pageCount = Math.ceil(todo.length / pageSize);
+  pageNumber = Array.from(Array(pageCount).keys());
+
+  const changePagination = (page) => {
+    setCurrentPage(page + 1);
+  };
 
   return (
     <div>
@@ -34,7 +41,7 @@ function App() {
           </thead>
           <tbody>
             {todo.map((item) => (
-              <tr>
+              <tr key={todo.id}>
                 <td>{item.id}</td>
                 <td>{item.userId}</td>
                 <td>{item.title}</td>
@@ -54,19 +61,17 @@ function App() {
       )}
       <nav className="d-flex justify-content-center">
         <ul className="pagination pagination-lg">
-          <li className="page-item active" aria-current="page">
-            <span className="page-link">1</span>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="/">
-              2
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="/">
-              3
-            </a>
-          </li>
+          {pageNumber.map((item) => (
+            <li
+              key={item + 1}
+              className={`page-item ${
+                currentPage === item + 1 ? "active" : ""
+              }`}
+              onClick={() => changePagination(item)}
+            >
+              <span className="page-link">{item + 1}</span>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>
