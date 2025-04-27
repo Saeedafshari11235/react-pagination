@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
   const [todo, setTodo] = useState([]);
   const [isPending, setIsPending] = useState(true);
+  const [paginatedTodo, setPaginatedTodo] = useState([]);
 
   useEffect(() => {
     setIsPending(true);
@@ -18,7 +19,39 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div>
+      {!todo ? (
+        "Loading"
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User ID</th>
+              <th>Title</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todo.map((item) => (
+              <tr>
+                <td>{item.id}</td>
+                <td>{item.userId}</td>
+                <td>{item.title}</td>
+                <td>
+                  <p
+                    className={
+                      item.completed ? "btn btn-success" : "btn btn-danger"
+                    }
+                  >
+                    {item.completed ? "Completed" : "Pending"}
+                  </p>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
